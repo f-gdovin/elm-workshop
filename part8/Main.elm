@@ -136,14 +136,14 @@ type Msg
 
 decodeResponse : Value -> Msg
 decodeResponse json =
-    -- TODO use decodeValue to decode the response into a Msg.
-    --
-    -- Hint: look at the definition of Msg and
-    -- the definition of responseDecoder
-    HandleSearchError (Just "TODO decode the response!")
+    case decodeValue responseDecoder json of
+        Ok searchResults ->
+            HandleSearchResponse searchResults
+        Err _ ->
+            HandleSearchError (Just "JS part fucked up!")
 
 
-port githubSearch : String -> Cmd msg
+port githubSearch : String -> Cmd msg --send stuff to JS and "forget". This always works
 
 
-port githubResponse : (Value -> msg) -> Sub msg
+port githubResponse : (Value -> msg) -> Sub msg --given a Value from JS and a message, subscribe to this kind of message
